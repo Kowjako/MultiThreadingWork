@@ -4,7 +4,15 @@
 #include <unistd.h> /* sleep */
 #include <iostream>
 
+#include "CinemaHall.h"
+#include "Cashbox.h"
+
 int THREAD_NUM;
+
+/* Deklaracja naszych zasobów */
+CinemaHall* cinemaHall;
+Cashbox* cashBox;
+
 
 int main(int args, char *argv[])
 {
@@ -17,6 +25,12 @@ int main(int args, char *argv[])
 
 	THREAD_NUM = (int)(*argv[1]) - 48; /* wyłuskujemy wartość spod wskaźnika */
 	pthread_t Threads[THREAD_NUM]; 
+
+	/*Tworzenie naszybch zasobów*/
+	cinemaHall = new CinemaHall(0); /* ustawiamy obecny czas sali */
+	cashBox = new Cashbox(30); /* 30 biletów */
+	cashBox->GenerateTickets(); /* tworzymy bielty naszego automatu */
+
 	
 	/* for(auto i = 0; i<THREAD_NUM; i++)
 	{
@@ -28,30 +42,19 @@ int main(int args, char *argv[])
 		}
 	} */
 
-	/* for(auto i = 0; i<THREAD_NUM; i++)
-	{
-		threadCallback = pthread_join(Threads[i], NULL); // czekamy na ukończenie wątków 
-		if(threadCallback)
-		{
-			std::cout<<"Błąd podczas joinowania wątku"<<std::endl;
-			return -1;
-		}
-		std::cout<<"Poprawnie ukończony watek "<<i<<std::endl;
-	} */
-
-	int endFlag = 0;
+	char endFlag = 0;
 	do
 	{
 		noecho();
 		endFlag = getch();
 	}
-	while(endFlag != 27);
+	while(endFlag != 'q'); /* pryzcisk 'q' kończy działanie aplikacji */
 
 	for(auto i=0;i<THREAD_NUM;i++)
 	{
 		if(pthread_join(Threads[i], NULL) != 0)
 		{
-			std::cout<<"Klient zepsuł Multikino"<<std::endl;
+			std::cout<<"Klient zepsuł Multikino, przepraszamy za utrudnienia..."<<std::endl;
 			return -1;
 		}
 		std::cout<<"Klient: "<<i<<" opuszcza Multikino"<<std::endl;

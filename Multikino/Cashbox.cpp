@@ -34,3 +34,8 @@ Ticket Cashbox::GetTicket()
 	pthread_mutex_unlock(&this->mutex);
 	return t;
 }
+
+void Cashbox::GenerateTickets()
+{
+	
+}
