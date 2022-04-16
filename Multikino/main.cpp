@@ -28,11 +28,11 @@ int main(int args, char *argv[])
 
 	/*Tworzenie naszybch zasobów*/
 	cinemaHall = new CinemaHall(0); /* ustawiamy obecny czas sali */
-	cashBox = new Cashbox(30); /* 30 biletów */
+	cashBox = new Cashbox(20); /* 20 biletów = 4 premiery po 5 klientow */
 	cashBox->GenerateTickets(); /* tworzymy bielty naszego automatu */
 
 	
-	/* for(auto i = 0; i<THREAD_NUM; i++)
+	for(auto i = 0; i<THREAD_NUM; i++)
 	{
 		threadCallback = pthread_create(&Threads[i], NULL, NULL, (void*)i);
 		if(threadCallback)
@@ -40,7 +40,7 @@ int main(int args, char *argv[])
 			std::cout<<"Błąd podczas tworzenia wątku"<<std::endl;
 			return -1;
 		}
-	} */
+	} 
 
 	char endFlag = 0;
 	do

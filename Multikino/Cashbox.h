@@ -33,7 +33,6 @@ class Cashbox
 		Cashbox(int capacity, std::vector<Ticket> tickets);
 
 		void GenerateTickets();
-		void AddTicket(Ticket ticket);
 		Ticket GetTicket();
 
 	private:
