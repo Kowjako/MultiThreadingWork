@@ -5,6 +5,7 @@
 #include <vector>
 #include <pthread.h>
 #include <unistd.h> 
+#include <ncurses.h>
 
 struct Ticket
 {
@@ -33,7 +34,7 @@ class Cashbox
 		Cashbox(int capacity, std::vector<Ticket> tickets);
 
 		void GenerateTickets();
-		Ticket GetTicket();
+		Ticket* GetTicket();
 
 	private:
 		pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;

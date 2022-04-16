@@ -13,7 +13,7 @@ Client::Client(std::string name, std::string surname, Ticket* ticket) : Client(n
 
 void Client::DisplayInfo()
 {
-	std::cout<<"Imie: "<<this->_name<<" Nazwisko: "<<this->_surname;
+	std::cout<<"Imie: "<<this->_name<<", Nazwisko: "<<this->_surname<<std::endl;
 	if(this->_ticket != NULL)
 	{
 		std::cout<<"Bilet: "<<std::endl;
@@ -25,6 +25,8 @@ void Client::BuyTicket(Ticket* ticket)
 {
 	this->_ticket = ticket;
 	this->_clientState = BuyingTicket;
+	printw("%s %s kupuje bilet...\n", this->_name.data(), this->_surname.data());
+	refresh();
 }
 
 ClientState Client::GetClientState()
@@ -41,5 +43,5 @@ void Client::WatchMovie(std::string filmName, int time)
 {
 	this->_clientState = WatchingMovie;
 	std::cout<<"Imie: "<<this->_name<<" Nazwisko: "<<this->_surname<<" Ogląda film: "<<filmName<<std::endl;
-	sleep(time * 1000); /* Oglądamy film przez (time) sekund */
+	sleep(time); /* Oglądamy film przez (time) sekund */
 }
