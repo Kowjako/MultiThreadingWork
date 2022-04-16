@@ -36,3 +36,10 @@ void Client::SetClientState(ClientState state)
 {
 	this->_clientState = state;
 }
+
+void Client::WatchMovie(std::string filmName, int time)
+{
+	this->_clientState = WatchingMovie;
+	std::cout<<"Imie: "<<this->_name<<" Nazwisko: "<<this->_surname<<" Ogląda film: "<<filmName<<std::endl;
+	sleep(time * 1000); /* Oglądamy film przez (time) sekund */
+}

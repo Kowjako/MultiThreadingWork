@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include <pthread.h>
+#include <unistd.h> 
 
 struct Ticket
 {
@@ -20,8 +22,7 @@ struct Ticket
 	std::string TicketInfo()
 	{
 		return "Nazwa filmu: " + this->filmName + 
-			   " Termin: " + std::to_string(this->startTime) + " - " + 
-			   std::to_string(this->endTime);
+			   " Termin: " + std::to_string(this->startTime) + " - " + std::to_string(this->endTime);
 	}
 };
 
@@ -35,6 +36,7 @@ class Cashbox
 		Ticket GetTicket();
 
 	private:
+		pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 		int _capacity;
 		std::vector<Ticket> _tickets;
 };

@@ -3,6 +3,7 @@
 
 #include "Cashbox.h"
 #include <iostream>
+#include <unistd.h> 
 
 enum ClientState
 {
@@ -26,6 +27,7 @@ class Client {
 
 		void BuyTicket(Ticket* ticket);
 		void DisplayInfo();
+		void WatchMovie(std::string filmName, int time);
 
 	private:
 		ClientState _clientState;

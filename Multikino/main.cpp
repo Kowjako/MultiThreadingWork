@@ -8,10 +8,8 @@ int THREAD_NUM;
 
 int main(int args, char *argv[])
 {
-	int threadCallback;;
-
 	/* Sprawdzenie poprawności uruchomienia */
-	if(args > 2 || args == 0)
+	if(args > 2)
 	{
 		std::cout<<"Należy podać tylko jeden parametr!"<<std::endl;
 		return -1;	
@@ -40,6 +38,24 @@ int main(int args, char *argv[])
 		}
 		std::cout<<"Poprawnie ukończony watek "<<i<<std::endl;
 	} */
+
+	int endFlag = 0;
+	do
+	{
+		noecho();
+		endFlag = getch();
+	}
+	while(endFlag != 27);
+
+	for(auto i=0;i<THREAD_NUM;i++)
+	{
+		if(pthread_join(Threads[i], NULL) != 0)
+		{
+			std::cout<<"Klient zepsuł Multikino"<<std::endl;
+			return -1;
+		}
+		std::cout<<"Klient: "<<i<<" opuszcza Multikino"<<std::endl;
+	}
 
 	std::cout<<"Koniec programu..."<<std::endl;
     pthread_exit(NULL);
