@@ -12,6 +12,8 @@ int THREAD_NUM;
 /* Deklaracja naszych zasobów */
 CinemaHall* cinemaHall;
 Cashbox* cashBox;
+std::vector<Client> clients;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 const char* names[15] = {"Adam", "Robert", "John", "Charles", "William",
 					     "Richard", "Thomas", "Daniel", "Matthew", "Anthony",
@@ -20,11 +22,25 @@ const char* surnames[15] = {"Smith", "Jones", "Taylor", "Williams", "Brown",
 							"White", "Harris", "Martin", "Davies","Wilson",
 							"Nixdorf","Evans","King","Green","Clark"};
 
-void* startSimulation(void* args)
+void threadSafeAddClient(Client client)
+{
+	pthread_mutex_lock(&mutex);
+	clients.push_back(client);
+	pthread_mutex_unlock(&mutex);
+}
+
+void* StartRegistration(void* args)
 {
 	Client* client = new Client(names[rand()%15], surnames[rand()%15]);
 	client->BuyTicket(cashBox->GetTicket());
+	threadSafeAddClient(*client);
 	pthread_exit(NULL);
+}
+
+void* StartActionInHall(void* args)
+{
+	Client actualClient = clients.at((long)args);
+	cinemaHall->AddClient(actualClient);
 }
 
 int main(int args, char *argv[])
@@ -40,7 +56,8 @@ int main(int args, char *argv[])
 
 	initscr(); /* uruchomienie nowego okna */
 	start_color(); /* uruchamiamy RGB */
-	init_pair(1, COLOR_RED, COLOR_BLACK);
+	scrollok(stdscr, TRUE); /*automatyczne przewijanie terminalu */
+	init_pair(1, COLOR_RED, COLOR_BLUE);
 
 	attron(A_DIM);
 	printw("Witamy w Multikino v2\n");
@@ -52,13 +69,20 @@ int main(int args, char *argv[])
 
 	/*Tworzenie naszybch zasobów*/
 	cinemaHall = new CinemaHall(0); /* ustawiamy obecny czas sali */
+	std::vector<std::string> films = {"Home alone: 1:00 - 3:00",
+							 		  "Crazy people: 3:00 - 6:00",
+							 		  "My cat is super: 6:00 - 11:00",
+							 		  "Independent city: 11:00 - 12:00"};
+	cinemaHall->SetSchedule(films);
+	
+
 	cashBox = new Cashbox(20); /* 20 biletów = 4 premiery po 5 klientow */
 	cashBox->GenerateTickets(); /* tworzymy bielty naszego automatu */
 
 	
 	for(auto i = 0; i<THREAD_NUM; i++)
 	{
-		if(pthread_create(&Threads[i], NULL, &startSimulation, (void*)i) != 0)
+		if(pthread_create(&Threads[i], NULL, &StartRegistration, (void*)i) != 0)
 		{
 			std::cout<<"Błąd podczas tworzenia wątku"<<std::endl;
 			return -1;
@@ -72,13 +96,30 @@ int main(int args, char *argv[])
 		}
 	} 
 
-	int endFlag = 0;
-	do
+	for(auto i=0;i<THREAD_NUM;i++)
 	{
-		noecho();
-		endFlag = getch();;
+		if(pthread_join(Threads[i], NULL) != 0)
+		{
+			std::cout<<"Klient zepsuł Multikino, przepraszamy za utrudnienia..."<<std::endl;
+			return -1;
+		}
+		printw("Klient: %d wszedl do sali glownej i kupil bilet\n",i);
+		refresh();
 	}
-	while(endFlag != 'q'); /* pryzcisk 'q' kończy działanie aplikacji */
+
+	/* Gdy już wszyscy weszli i wzięli bilety to wyświetlamy info */
+	printw("\n");
+	cinemaHall->PrintCinemaHallInfo();
+
+	for(auto i = 0; i<THREAD_NUM; i++)
+	{
+		if(pthread_create(&Threads[i], NULL, &StartActionInHall, (void*)i) != 0)
+		{
+			std::cout<<"Błąd podczas tworzenia wątku"<<std::endl;
+			return -1;
+		}
+	}
+
 
 	for(auto i=0;i<THREAD_NUM;i++)
 	{
@@ -87,11 +128,19 @@ int main(int args, char *argv[])
 			std::cout<<"Klient zepsuł Multikino, przepraszamy za utrudnienia..."<<std::endl;
 			return -1;
 		}
-		printw("Klient: %d opuszcza Multikino\n",i);
+		printw("Klient: %d opuscil Multikino\n",i);
 		refresh();
 	}
 
-	sleep(1);
+	//=====================UKONCZENIE====================//
+	int endFlag = 0;
+	do
+	{
+		noecho();
+		endFlag = getch();;
+	}
+	while(endFlag != 'q'); /* pryzcisk 'q' kończy działanie aplikacji */
+
 	refresh();
 	endwin(); /*zamykamy ncurses */
 
