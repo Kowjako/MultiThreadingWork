@@ -19,27 +19,37 @@ CinemaHall::~CinemaHall()
 void CinemaHall::StartFilm()
 {
 	SetUpStartFilm();
-	std::cout<<"Rozpoczęty film: "<<this->_actualFilmInfo<<std::endl;
+	printw("Rozpoczety film: %s\n",this->_actualFilmInfo.data());
 	for(auto i =0;i<this->_clients.size();i++)
 	{
-		this->_clients[i].WatchMovie(this->_actualFilmInfo, rand() % 10 + 5); /* film trwa od 5 do 15 sekund */
+		this->_clients[i].WatchMovie(this->_actualFilmInfo); /* film trwa od 5 do 15 sekund */
+		refresh();
 	}
+	sleep(6);
+	ClearHall();
+}
+
+void CinemaHall::SetSchedule(std::vector<std::string> schedule)
+{
+	this->_schedule = schedule;
 }
 
 void CinemaHall::AddClient(Client client)
 {
 	sem_wait(&this->_semaphore);
 	_clients.push_back(client); /* uzupełniamy naszych klientów */
+	if(_clients.size() == 5)
+	{
+		StartFilm();
+	}
 }
 
 void CinemaHall::ClearHall()
 {
-	std::cout<<"Koniec prezentacji filmu."<<std::endl;
+	printw("Koniec prezentacji filmu.\n");
 	for(auto i = 0;i< this->_clients.size(); i++)
 	{
-		std::cout<<"Klient: ";
-		this->_clients[i].DisplayInfo();
-		std::cout<<" opuscił salę."<<std::endl;
+		printw("Klient: %s opuscil sale\n", this->_clients[i].GetNameAndSurname().data());
 		sem_post(&this->_semaphore); /* zwalniamy miejsca na naszej sali */
 	}
 	this->_clients.clear();
@@ -47,11 +57,14 @@ void CinemaHall::ClearHall()
 
 void CinemaHall::PrintCinemaHallInfo()
 {
-	std::cout<<"Aktualny plan filmów dla sali:"<<std::endl;
+	start_color(); /* uruchamiamy RGB */
+	attron(COLOR_PAIR(1));
+	printw("Aktualny plan filmów dla sali:\n");
 	for(auto i = 0;i < this->_schedule.size(); i++)
 	{
-		std::cout<<this->_schedule[i]<<std::endl;
+		printw("%s\n",this->_schedule[i].data());
 	}
+	attroff(COLOR_PAIR(1));
 }
 
 void CinemaHall::SetUpStartFilm()

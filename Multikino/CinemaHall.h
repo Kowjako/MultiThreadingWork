@@ -4,6 +4,7 @@
 #include "Client.h"
 #include <vector>
 #include <semaphore.h>
+#include <ncurses.h>
 
 class CinemaHall
 {
@@ -13,9 +14,9 @@ class CinemaHall
 		CinemaHall(int actualTime, std::vector<std::string> _schedule);
 
 		void AddClient(Client client);
-		void ClearHall();
 		void StartFilm();
 		void PrintCinemaHallInfo();
+		void SetSchedule(std::vector<std::string> films);
 
 	private:
 		sem_t _semaphore;
@@ -25,6 +26,7 @@ class CinemaHall
 		std::vector<Client> _clients;
 
 		void SetUpStartFilm();
+		void ClearHall();
 };
 
 #endif
