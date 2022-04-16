@@ -24,4 +24,15 @@ void Client::DisplayInfo()
 void Client::BuyTicket(Ticket* ticket)
 {
 	this->_ticket = ticket;
+	this->_clientState = BuyingTicket;
+}
+
+ClientState Client::GetClientState()
+{
+	return this->_clientState;
+}
+
+void Client::SetClientState(ClientState state)
+{
+	this->_clientState = state;
 }

@@ -3,4 +3,4 @@ multithread: main.cpp
 	g++ -pthread main.cpp Cashbox.cpp Cashbox.h CinemaHall.cpp CinemaHall.h Client.cpp Client.h -o Multikino -lncurses
 
 clean:
-	rm Mulitikino
+	rm Multikino
