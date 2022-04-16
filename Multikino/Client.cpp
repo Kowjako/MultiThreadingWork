@@ -13,11 +13,11 @@ Client::Client(std::string name, std::string surname, Ticket* ticket) : Client(n
 
 void Client::DisplayInfo()
 {
-	std::cout<<"Imie: "<<this->_name<<", Nazwisko: "<<this->_surname<<std::endl;
+	printw("Imie: %s, Nazwisko: %s\n",this->_name.data(),this->_surname.data());
 	if(this->_ticket != NULL)
 	{
-		std::cout<<"Bilet: "<<std::endl;
-		std::cout<<_ticket->TicketInfo()<<std::endl;
+		printw("Bilet: ");
+		printw(_ticket->TicketInfo().data());
 	}
 }
 
@@ -27,6 +27,11 @@ void Client::BuyTicket(Ticket* ticket)
 	this->_clientState = BuyingTicket;
 	printw("%s %s kupuje bilet...\n", this->_name.data(), this->_surname.data());
 	refresh();
+}
+
+std::string Client::GetNameAndSurname()
+{
+	return this->_name + " " + this->_surname;
 }
 
 ClientState Client::GetClientState()
@@ -39,9 +44,8 @@ void Client::SetClientState(ClientState state)
 	this->_clientState = state;
 }
 
-void Client::WatchMovie(std::string filmName, int time)
+void Client::WatchMovie(std::string filmName)
 {
 	this->_clientState = WatchingMovie;
-	std::cout<<"Imie: "<<this->_name<<" Nazwisko: "<<this->_surname<<" Ogląda film: "<<filmName<<std::endl;
-	sleep(time); /* Oglądamy film przez (time) sekund */
+	printw("Imie: %s, Nazisko: %s -> Oglada film: %s\n",this->_name.data(), this->_surname.data(), filmName.data());
 }

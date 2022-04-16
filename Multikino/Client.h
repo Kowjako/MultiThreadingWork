@@ -4,6 +4,7 @@
 #include "Cashbox.h"
 #include <iostream>
 #include <unistd.h> 
+#include <ncurses.h>
 
 enum ClientState
 {
@@ -25,9 +26,11 @@ class Client {
 		void SetClientState(ClientState);
 		ClientState GetClientState();
 
+		std::string GetNameAndSurname();
+
 		void BuyTicket(Ticket* ticket);
 		void DisplayInfo();
-		void WatchMovie(std::string filmName, int time);
+		void WatchMovie(std::string filmName);
 
 	private:
 		ClientState _clientState;

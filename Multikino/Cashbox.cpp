@@ -23,7 +23,7 @@ Ticket* Cashbox::GetTicket()
 	int ticketPosition = rand() % this->_tickets.size();
 	printw("Przygotowanie biletu dla klienta\n");
 	refresh();
-	sleep(3); /* czekamy 3 sek na przygotwanie biletu */
+	sleep(1); /* czekamy 3 sek na przygotwanie biletu */
 
 	Ticket* t = &this->_tickets[ticketPosition];
 	this->_tickets.erase(this->_tickets.begin() + ticketPosition);
@@ -35,7 +35,7 @@ Ticket* Cashbox::GetTicket()
 
 void Cashbox::GenerateTickets()
 {
-	const char* filmNames[4] = {"Pianista", "Piętro wyżej", "Pociąg", "Niepodległość"};
+	const char* filmNames[4] = {"Home alone", "Crazy people", "My cat is super", "Independent city"};
 	int durations[4] = {2, 3, 5, 1};
 	int endTime = 0;
 	for(auto i=0;i<this->_capacity / 4;i++) /* bo na każdy film po 5 biletów */
