@@ -1,4 +1,4 @@
-#include <Client.h>
+#include "Client.h"
 
 Client::Client(std::string name, std::string surname)
 {
@@ -6,7 +6,7 @@ Client::Client(std::string name, std::string surname)
 	this->_surname = surname;
 }
 
-Client::Client(std::string name, std::string surname, Ticket ticket) : Client(name, surname)
+Client::Client(std::string name, std::string surname, Ticket* ticket) : Client(name, surname)
 {
 	this->_ticket = ticket;
 }
@@ -14,14 +14,14 @@ Client::Client(std::string name, std::string surname, Ticket ticket) : Client(na
 void Client::DisplayInfo()
 {
 	std::cout<<"Imie: "<<this->_name<<" Nazwisko: "<<this->_surname;
-	if(this->_ticket != null)
+	if(this->_ticket != NULL)
 	{
-		std::cout<<"Bilet: "<<endl;
-		std::cout<<_ticket.TicketInfo()<<endl;
+		std::cout<<"Bilet: "<<std::endl;
+		std::cout<<_ticket->TicketInfo()<<std::endl;
 	}
 }
 
-void Client::BuyTicket(Ticket ticket)
+void Client::BuyTicket(Ticket* ticket)
 {
-	this->ticket = ticket;
+	this->_ticket = ticket;
 }

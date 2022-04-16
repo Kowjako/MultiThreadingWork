@@ -1,7 +1,8 @@
 #ifndef CINEMAHALL_H
 #define CINEMAHALL_H
 
-#include <Client.h>
+#include "Client.h"
+#include <vector>
 
 class CinemaHall
 {
@@ -17,10 +18,10 @@ class CinemaHall
 	private:
 		int _actualTime;
 		std::string _actualFilmInfo;
-		std::vector<string> _schedule;
+		std::vector<std::string> _schedule;
 		std::vector<Client> _clients;
 
-		void SetUpTimeAndSchedule();
+		void SetUpStartFilm();
 };
 
 #endif

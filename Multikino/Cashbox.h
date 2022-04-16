@@ -1,6 +1,9 @@
 #ifndef CASHBOX_H
 #define CASHBOX_H
 
+#include <iostream>
+#include <vector>
+
 struct Ticket
 {
 	std::string filmName;
@@ -16,7 +19,9 @@ struct Ticket
 
 	std::string TicketInfo()
 	{
-		return "Nazwa filmu: " + this->filmName + " Termin: " + this->startTime + " - " + this->endTime;
+		return "Nazwa filmu: " + this->filmName + 
+			   " Termin: " + std::to_string(this->startTime) + " - " + 
+			   std::to_string(this->endTime);
 	}
 };
 
@@ -27,7 +32,7 @@ class Cashbox
 		Cashbox(int capacity, std::vector<Ticket> tickets);
 
 		void AddTicket(Ticket ticket);
-		void GetTicket();
+		Ticket GetTicket();
 
 	private:
 		int _capacity;
