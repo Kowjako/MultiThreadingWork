@@ -163,13 +163,11 @@ int main(int args, char *argv[])
 	}
 
 	printw("Multikino puste... wcisnij 'q' aby skonczyc program\n");
-	int endFlag = 0;
 	do
 	{
 		noecho();
-		endFlag = getch();;
 	}
-	while(endFlag != 'q');
+	while(getch() != 'q');
 
 	refresh();
 	endwin(); /*zamykamy ncurses */
