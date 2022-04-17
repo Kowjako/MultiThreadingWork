@@ -22,9 +22,11 @@ void CinemaHall::StartFilm()
 	printw("Rozpoczety film: %s\n",this->_actualFilmInfo.data());
 	for(auto i =0;i<this->_clients.size();i++)
 	{
-		this->_clients[i].WatchMovie(this->_actualFilmInfo); /* film trwa od 5 do 15 sekund */
+		this->_clients[i]->WatchMovie(this->_actualFilmInfo); /* film trwa od 5 do 15 sekund */
 		refresh();
 	}
+
+	sleep(6);
 
 	if(_actualFilmInfo == this->_schedule[0])
 	{
@@ -43,7 +45,11 @@ void CinemaHall::StartFilm()
 		_actualTime += 1;
 	}
 
-	sleep(6);
+	std::for_each(this->_clients.begin(), this->_clients.end(), [](Client* t)
+	{
+		t->SetClientState(AfterMovie);
+	});
+
 	ClearHall();
 }
 
@@ -52,16 +58,18 @@ void CinemaHall::SetSchedule(std::vector<std::string> schedule)
 	this->_schedule = schedule;
 }
 
-void CinemaHall::AddClient(Client client)
+void CinemaHall::AddClient(Client* client)
 {
 	/* Wpuszczamy klientów co mają bilet na określoną godzinę */
-	if(client.GetTicket()->startTime == _actualTime)
+	if(client->GetTicket()->startTime == _actualTime)
 	{
+		client->SetClientState(WaitingForMovie);
 		sem_wait(&this->_semaphore);
 		_clients.push_back(client); /* uzupełniamy naszych klientów */
+		
 		if(_clients.size() == 5)
 		{
-			StartFilm();
+			StartFilm();	
 		}
 	}
 }
@@ -71,7 +79,7 @@ void CinemaHall::ClearHall()
 	printw("Koniec prezentacji filmu.\n");
 	for(auto i = 0;i< this->_clients.size(); i++)
 	{
-		printw("Klient: %s opuscil sale\n", this->_clients[i].GetNameAndSurname().data());
+		printw("Klient: %s opuscil sale\n", this->_clients[i]->GetNameAndSurname().data());
 		sem_post(&this->_semaphore); /* zwalniamy miejsca na naszej sali */
 	}
 	this->_clients.clear();
@@ -95,12 +103,16 @@ void CinemaHall::SetUpStartFilm()
 	{
 		case 1:
 			_actualFilmInfo = this->_schedule[0];
+			break;
 		case 3:
 			_actualFilmInfo = this->_schedule[1];
+			break;
 		case 6:
 			_actualFilmInfo = this->_schedule[2];
-		case 11:
+			break;
+		case 11:;
 			_actualFilmInfo = this->_schedule[3];
+			break;
 		default:
 			break;
 	}
