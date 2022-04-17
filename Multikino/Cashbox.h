@@ -37,6 +37,7 @@ class Cashbox
 		Ticket* GetTicket();
 
 	private:
+		int _ticketPosition=0;
 		pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 		int _capacity;
 		std::vector<Ticket> _tickets;

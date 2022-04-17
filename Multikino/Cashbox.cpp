@@ -16,20 +16,18 @@ Ticket* Cashbox::GetTicket()
 	pthread_mutex_lock(&this->mutex);
 	if(this->_tickets.size() == 0)
 	{
-		printw("Nie ma już dostępnych biletów.\n");
+		printw("Nie ma już dostepnych biletów.\n");
 		refresh();
 	}
 
-	int ticketPosition = rand() % this->_tickets.size();
 	printw("Przygotowanie biletu dla klienta\n");
 	refresh();
-	sleep(1); /* czekamy 3 sek na przygotwanie biletu */
+	sleep(1); /* czekamy 1 sek na przygotwanie biletu */
 
-	Ticket* t = &this->_tickets[ticketPosition];
-	this->_tickets.erase(this->_tickets.begin() + ticketPosition);
-	std::cout<<t->TicketInfo()<<std::endl;
+	Ticket* t = &this->_tickets[_ticketPosition];
+	this->_ticketPosition++;
 
-	/* Zwalniamy dostęp do kasy */
+	/* Zwalniamy miejsce przy kasie */
 	pthread_mutex_unlock(&this->mutex);
 	return t;
 }
@@ -55,12 +53,5 @@ void Cashbox::GenerateTickets()
 			this->_tickets.push_back(*t);
 		}
 		endTime += durations[i];
-	}
-	for(auto i=0;i<this->_tickets.size();i++) /* bo na każdy film po 5 biletów */
-	{
-		std::cout<<this->_tickets.size()<<std::endl;
-		Ticket* t = &this->_tickets[i];
-		printw(t->TicketInfo().data());
-		refresh();
 	}
 }
