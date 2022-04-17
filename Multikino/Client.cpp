@@ -49,3 +49,8 @@ void Client::WatchMovie(std::string filmName)
 	this->_clientState = WatchingMovie;
 	printw("Imie: %s, Nazisko: %s -> Oglada film: %s\n",this->_name.data(), this->_surname.data(), filmName.data());
 }
+
+Ticket* Client::GetTicket()
+{
+	return this->_ticket;
+}

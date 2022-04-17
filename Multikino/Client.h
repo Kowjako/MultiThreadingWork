@@ -28,6 +28,7 @@ class Client {
 
 		std::string GetNameAndSurname();
 
+		Ticket* GetTicket();
 		void BuyTicket(Ticket* ticket);
 		void DisplayInfo();
 		void WatchMovie(std::string filmName);

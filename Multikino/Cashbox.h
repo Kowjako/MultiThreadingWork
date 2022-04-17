@@ -23,7 +23,7 @@ struct Ticket
 	std::string TicketInfo()
 	{
 		return "Nazwa filmu: " + this->filmName + 
-			   " Termin: " + std::to_string(this->startTime) + " - " + std::to_string(this->endTime);
+			   " Termin: " + std::to_string(this->startTime) + " - " + std::to_string(this->endTime) + "\n";
 	}
 };
 

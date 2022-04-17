@@ -27,6 +27,7 @@ Ticket* Cashbox::GetTicket()
 
 	Ticket* t = &this->_tickets[ticketPosition];
 	this->_tickets.erase(this->_tickets.begin() + ticketPosition);
+	std::cout<<t->TicketInfo()<<std::endl;
 
 	/* Zwalniamy dostęp do kasy */
 	pthread_mutex_unlock(&this->mutex);
@@ -37,8 +38,8 @@ void Cashbox::GenerateTickets()
 {
 	const char* filmNames[4] = {"Home alone", "Crazy people", "My cat is super", "Independent city"};
 	int durations[4] = {2, 3, 5, 1};
-	int endTime = 0;
-	for(auto i=0;i<this->_capacity / 4;i++) /* bo na każdy film po 5 biletów */
+	int endTime = 1;
+	for(auto i=0;i<this->_capacity / 5;i++) /* bo na każdy film po 5 biletów */
 	{
 		for(auto j=0;j<5;j++)
 		{
@@ -53,6 +54,13 @@ void Cashbox::GenerateTickets()
 			}
 			this->_tickets.push_back(*t);
 		}
-		endTime = durations[i] + 1;
+		endTime += durations[i];
+	}
+	for(auto i=0;i<this->_tickets.size();i++) /* bo na każdy film po 5 biletów */
+	{
+		std::cout<<this->_tickets.size()<<std::endl;
+		Ticket* t = &this->_tickets[i];
+		printw(t->TicketInfo().data());
+		refresh();
 	}
 }

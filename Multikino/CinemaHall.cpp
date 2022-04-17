@@ -25,6 +25,24 @@ void CinemaHall::StartFilm()
 		this->_clients[i].WatchMovie(this->_actualFilmInfo); /* film trwa od 5 do 15 sekund */
 		refresh();
 	}
+
+	if(_actualFilmInfo == this->_schedule[0])
+	{
+		_actualTime += 2;
+	}
+	else if(_actualFilmInfo == this->_schedule[1])
+	{
+		_actualTime += 3;
+	}
+	else if(_actualFilmInfo == this->_schedule[2])
+	{
+		_actualTime += 5;
+	}
+	else
+	{
+		_actualTime += 1;
+	}
+
 	sleep(6);
 	ClearHall();
 }
@@ -36,11 +54,15 @@ void CinemaHall::SetSchedule(std::vector<std::string> schedule)
 
 void CinemaHall::AddClient(Client client)
 {
-	sem_wait(&this->_semaphore);
-	_clients.push_back(client); /* uzupełniamy naszych klientów */
-	if(_clients.size() == 5)
+	/* Wpuszczamy klientów co mają bilet na określoną godzinę */
+	if(client.GetTicket()->startTime == _actualTime)
 	{
-		StartFilm();
+		sem_wait(&this->_semaphore);
+		_clients.push_back(client); /* uzupełniamy naszych klientów */
+		if(_clients.size() == 5)
+		{
+			StartFilm();
+		}
 	}
 }
 
@@ -69,5 +91,17 @@ void CinemaHall::PrintCinemaHallInfo()
 
 void CinemaHall::SetUpStartFilm()
 {
-	_actualFilmInfo = this->_schedule[_actualTime];
+	switch(this->_actualTime)
+	{
+		case 1:
+			_actualFilmInfo = this->_schedule[0];
+		case 3:
+			_actualFilmInfo = this->_schedule[1];
+		case 6:
+			_actualFilmInfo = this->_schedule[2];
+		case 11:
+			_actualFilmInfo = this->_schedule[3];
+		default:
+			break;
+	}
 }
