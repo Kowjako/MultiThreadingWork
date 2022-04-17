@@ -15,7 +15,9 @@ enum ClientState
 	/* Czeka na film (wejście do sali) */
 	WaitingForMovie = 2,
 	/* Ogląda premierę */
-	WatchingMovie = 3
+	WatchingMovie = 3,
+	/* Opuszcza Multikino */
+	AfterMovie = 4
 };
 
 class Client {
