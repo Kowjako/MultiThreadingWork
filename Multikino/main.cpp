@@ -32,6 +32,16 @@ void threadSafeAddClient(Client* client)
 	pthread_mutex_unlock(&mutex);
 }
 
+void* RunAsyncCancellation(void* args)
+{
+	do
+	{
+		noecho();
+	}
+	while(getch() != 'x');
+	exitFlag = true;	/* ustawiamy flagę -> powoduje zamknięcie pozostałych wątków */
+}
+
 void* StartRegistration(void* args)
 {
 	Client* client = new Client(names[rand()%15], surnames[rand()%15]);
@@ -67,7 +77,8 @@ int main(int args, char *argv[])
 	initscr(); /* uruchomienie nowego okna */
 	start_color(); /* uruchamiamy RGB */
 	scrollok(stdscr, TRUE); /*automatyczne przewijanie terminalu */
-	init_pair(1, COLOR_RED, COLOR_BLUE);
+	init_pair(1, COLOR_RED, COLOR_BLACK);
+	init_pair(2, COLOR_GREEN, COLOR_WHITE);
 
 	attron(A_DIM);
 	printw("Witamy w Multikino v2\n");
@@ -106,6 +117,17 @@ int main(int args, char *argv[])
 		}
 	} 
 
+	
+	/* Tworzenie wątku do asynchronicznego zamykania innych */
+	pthread_t AsyncThread;
+	if(pthread_create(&AsyncThread, NULL, &RunAsyncCancellation, (void*)0))
+	{
+		std::cout<<"Błąd podczas tworzenia wątku"<<std::endl;
+		return -1;
+	}
+
+
+	/* Czekamy póki wszyscy kupią bilety */
 	for(auto i=0;i<THREAD_NUM;i++)
 	{
 		if(pthread_join(Threads[i], NULL) != 0)
@@ -130,6 +152,7 @@ int main(int args, char *argv[])
 		}
 	}
 
+	/* Czekamy póki wszyscy zobaczą swoje filmy i zamykamy salę Multikina na dziś */
 	for(auto i=0;i<THREAD_NUM;i++)
 	{
 		if(pthread_join(Threads[i], NULL) != 0)

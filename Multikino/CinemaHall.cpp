@@ -19,7 +19,10 @@ CinemaHall::~CinemaHall()
 void CinemaHall::StartFilm()
 {
 	SetUpStartFilm();
+	start_color(); /* uruchamiamy RGB */
+	attron(COLOR_PAIR(2));
 	printw("Rozpoczety film: %s\n",this->_actualFilmInfo.data());
+	attroff(COLOR_PAIR(2));
 	for(auto i =0;i<this->_clients.size();i++)
 	{
 		this->_clients[i]->WatchMovie(this->_actualFilmInfo); /* film trwa od 5 do 15 sekund */
