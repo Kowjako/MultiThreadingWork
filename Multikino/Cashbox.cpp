@@ -44,7 +44,7 @@ void Cashbox::GenerateTickets()
 			Ticket* t = NULL;
 			if(i == 0)
 			{
-				t = new Ticket(filmNames[j], 1, durations[i] + 1);
+				t = new Ticket(filmNames[i], 1, durations[i] + 1);
 			}
 			else
 			{
@@ -52,6 +52,12 @@ void Cashbox::GenerateTickets()
 			}
 			this->_tickets.push_back(*t);
 		}
+		_generatedSchedule.push_back(*(new ScheduleElement(filmNames[i], i==0 ? 1 : endTime, i==0 ? durations[i] + 1 : endTime + durations[i])));
 		endTime += durations[i];
 	}
+}
+
+std::vector<ScheduleElement> Cashbox::GetPlannedSchedule()
+{
+	return this->_generatedSchedule;
 }

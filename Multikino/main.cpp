@@ -94,12 +94,11 @@ int main(int args, char *argv[])
 							 		  "Crazy people: 3:00 - 6:00",
 							 		  "My cat is super: 6:00 - 11:00",
 							 		  "Independent city: 11:00 - 12:00"};
-	cinemaHall->SetSchedule(films);
 	
 
 	cashBox = new Cashbox(20); /* 20 biletów = 4 premiery po 5 klientow */
 	cashBox->GenerateTickets(); /* tworzymy bielty naszego automatu */
-
+	cinemaHall->SetSchedule(cashBox->GetPlannedSchedule());
 	
 	for(auto i = 0; i<THREAD_NUM; i++)
 	{

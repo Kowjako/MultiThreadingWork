@@ -12,18 +12,18 @@ class CinemaHall
 	public:
 		virtual ~CinemaHall();
 		CinemaHall(int actualTime);
-		CinemaHall(int actualTime, std::vector<std::string> _schedule);
+		CinemaHall(int actualTime, std::vector<ScheduleElement> _schedule);
 
 		void AddClient(Client* client);
 		void StartFilm();
 		void PrintCinemaHallInfo();
-		void SetSchedule(std::vector<std::string> films);
+		void SetSchedule(std::vector<ScheduleElement> films);
 
 	private:
 		sem_t _semaphore;
 		int _actualTime;
-		std::string _actualFilmInfo;
-		std::vector<std::string> _schedule;
+		ScheduleElement _actualFilmInfo;
+		std::vector<ScheduleElement> _schedule;
 		std::vector<Client*> _clients;
 
 		void SetUpStartFilm();

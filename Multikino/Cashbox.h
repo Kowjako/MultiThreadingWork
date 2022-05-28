@@ -7,6 +7,25 @@
 #include <unistd.h> 
 #include <ncurses.h>
 
+struct ScheduleElement
+{
+	std::string _filmName;
+	int _startTime, _endTime;
+	ScheduleElement() {}
+	ScheduleElement(std::string _name, int _startTime, int _endTime)
+	{
+		_filmName = _name;
+		this->_startTime  = _startTime;
+		this->_endTime = _endTime;
+	}
+
+	std::string GetInfo()
+	{
+		return "Nazwa filmu: " + this->_filmName + 
+			   " Termin: " + std::to_string(this->_startTime) + " - " + std::to_string(this->_endTime) + "\n";
+	}
+};
+
 struct Ticket
 {
 	std::string filmName;
@@ -35,12 +54,14 @@ class Cashbox
 
 		void GenerateTickets();
 		Ticket* GetTicket();
+		std::vector<ScheduleElement> GetPlannedSchedule();
 
 	private:
 		int _ticketPosition=0;
 		pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 		int _capacity;
 		std::vector<Ticket> _tickets;
+		std::vector<ScheduleElement> _generatedSchedule;
 };
 
 #endif 

@@ -6,7 +6,7 @@ CinemaHall::CinemaHall(int actualTime)
 	sem_init(&this->_semaphore, 0, 5); /*inicjalizacja semaforu, 5 klientów jednocześnie */
 }
 
-CinemaHall::CinemaHall(int actualTime, std::vector<std::string> schedule) : CinemaHall(actualTime)
+CinemaHall::CinemaHall(int actualTime, std::vector<ScheduleElement> schedule) : CinemaHall(actualTime)
 {
 	this->_schedule = schedule;
 }
@@ -21,32 +21,17 @@ void CinemaHall::StartFilm()
 	SetUpStartFilm();
 	start_color(); /* uruchamiamy RGB */
 	attron(COLOR_PAIR(2));
-	printw("Rozpoczety film: %s\n",this->_actualFilmInfo.data());
+	printw("Rozpoczety film: %s\n",this->_actualFilmInfo._filmName.data());
 	attroff(COLOR_PAIR(2));
 	for(auto i =0;i<this->_clients.size();i++)
 	{
-		this->_clients[i]->WatchMovie(this->_actualFilmInfo); /* film trwa od 5 do 15 sekund */
+		this->_clients[i]->WatchMovie(this->_actualFilmInfo._filmName); /* film trwa od 5 do 15 sekund */
 		refresh();
 	}
 
 	sleep(6);
 
-	if(_actualFilmInfo == this->_schedule[0])
-	{
-		_actualTime += 2;
-	}
-	else if(_actualFilmInfo == this->_schedule[1])
-	{
-		_actualTime += 3;
-	}
-	else if(_actualFilmInfo == this->_schedule[2])
-	{
-		_actualTime += 5;
-	}
-	else
-	{
-		_actualTime += 1;
-	}
+	_actualTime += (_actualFilmInfo._endTime - _actualFilmInfo._startTime);
 
 	std::for_each(this->_clients.begin(), this->_clients.end(), [](Client* t)
 	{
@@ -56,7 +41,7 @@ void CinemaHall::StartFilm()
 	ClearHall();
 }
 
-void CinemaHall::SetSchedule(std::vector<std::string> schedule)
+void CinemaHall::SetSchedule(std::vector<ScheduleElement> schedule)
 {
 	this->_schedule = schedule;
 }
@@ -95,28 +80,19 @@ void CinemaHall::PrintCinemaHallInfo()
 	printw("Aktualny plan filmów dla sali:\n");
 	for(auto i = 0;i < this->_schedule.size(); i++)
 	{
-		printw("%s\n",this->_schedule[i].data());
+		printw("%s",this->_schedule[i].GetInfo().data());
 	}
 	attroff(COLOR_PAIR(1));
 }
 
 void CinemaHall::SetUpStartFilm()
 {
-	switch(this->_actualTime)
+	for(auto i = 0; i<this->_schedule.size();i++)
 	{
-		case 1:
-			_actualFilmInfo = this->_schedule[0];
+		if(this->_schedule[i]._startTime == _actualTime)
+		{
+			_actualFilmInfo = this->_schedule[i];
 			break;
-		case 3:
-			_actualFilmInfo = this->_schedule[1];
-			break;
-		case 6:
-			_actualFilmInfo = this->_schedule[2];
-			break;
-		case 11:;
-			_actualFilmInfo = this->_schedule[3];
-			break;
-		default:
-			break;
+		}
 	}
 }
