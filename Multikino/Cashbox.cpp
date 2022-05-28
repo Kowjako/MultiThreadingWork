@@ -10,6 +10,11 @@ Cashbox::Cashbox(int capacity, std::vector<Ticket> tickets) : Cashbox(capacity)
 	this->_tickets = tickets;
 }
 
+Cashbox::~Cashbox()
+{
+	pthread_mutex_destroy(&this->mutex);
+}
+
 Ticket* Cashbox::GetTicket()
 {
 	/* Obsługujemy pojedynczo klientów */

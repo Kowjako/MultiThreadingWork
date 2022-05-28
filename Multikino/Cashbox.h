@@ -49,6 +49,7 @@ struct Ticket
 class Cashbox
 {
 	public:
+		virtual ~Cashbox();
 		Cashbox(int capacity);
 		Cashbox(int capacity, std::vector<Ticket> tickets);
 
